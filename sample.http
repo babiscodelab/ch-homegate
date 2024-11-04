@@ -1,0 +1,38 @@
+
+### Request 1
+POST https://api.homegate.ch/search/listings HTTP/1.1
+content-type: application/json
+
+{"query":{"offerType":"BUY",
+"categories":["HOUSE","ROW_HOUSE","BIFAMILIAR_HOUSE",
+"TERRACE_HOUSE","VILLA","FARM_HOUSE","CAVE_HOUSE","CASTLE","GRANNY_FLAT","CHALET","RUSTICO","SINGLE_HOUSE","BUNGALOW","ENGADINE_HOUSE"],
+"numberOfRooms":{"from":4},"purchasePrice":{"to":5000000},
+"location":{"geoTags":["geo-region-zurich"]}},
+"sortBy":"listingType","sortDirection":"desc","from":20,
+"size":20,"trackTotalHits":true,"fieldset":"srp-list"}
+
+
+### Request 2
+GET https://api.homegate.ch/listings/listing/4001544515?sanitize=true HTTP/1.1
+
+### Request 3
+POST  https://api.homegate.ch/search/listings HTTP/1.1
+
+{"query":{"offerType":"RENT","categories":["APARTMENT","MAISONETTE","DUPLEX","ATTIC_FLAT","ROOF_FLAT",
+"STUDIO","SINGLE_ROOM","TERRACE_FLAT","BACHELOR_FLAT","LOFT","ATTIC","HOUSE","ROW_HOUSE","BIFAMILIAR_HOUSE",
+"TERRACE_HOUSE","VILLA","FARM_HOUSE","CAVE_HOUSE","CASTLE","GRANNY_FLAT","CHALET","RUSTICO","SINGLE_HOUSE",
+"BUNGALOW","ENGADINE_HOUSE","HOBBY_ROOM","CELLAR_COMPARTMENT","ATTIC_COMPARTMENT"],
+"excludeCategories":["FURNISHED_FLAT"],"monthlyRent":{"to":10000},"location":{"geoTags":["geo-city-thalwil"]}},
+"sortBy":"listingType","sortDirection":"desc","from":0,"size":1,"trackTotalHits":1000}
+
+### Request 4
+POST  https://api.homegate.ch/search/listings HTTP/1.1
+
+{"query":{"offerType":"RENT","categories":["APARTMENT","MAISONETTE","DUPLEX","ATTIC_FLAT","ROOF_FLAT",
+"STUDIO","SINGLE_ROOM","TERRACE_FLAT","BACHELOR_FLAT","LOFT","ATTIC","HOUSE","ROW_HOUSE","BIFAMILIAR_HOUSE",
+"TERRACE_HOUSE","VILLA","FARM_HOUSE","CAVE_HOUSE","CASTLE","GRANNY_FLAT","CHALET","RUSTICO","SINGLE_HOUSE",
+"BUNGALOW","ENGADINE_HOUSE","HOBBY_ROOM","CELLAR_COMPARTMENT","ATTIC_COMPARTMENT"],
+"excludeCategories":["FURNISHED_FLAT"],"monthlyRent":{"to":10000}},
+"sortBy":"listingType","sortDirection":"desc","from":0,"size":1,"trackTotalHits":1}
+
+
