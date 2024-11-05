@@ -13,7 +13,7 @@ content-type: application/json
 
 
 ### Request 2
-GET https://api.homegate.ch/listings/listing/4001544515?sanitize=true HTTP/1.1
+GET https://api.homegate.ch/listings/listing/4001657863?sanitize=true HTTP/1.1
 
 ### Request 3
 POST  https://api.homegate.ch/search/listings HTTP/1.1
