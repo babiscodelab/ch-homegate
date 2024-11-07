@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "homegater"
+version = "0.1.0"
+description = ""
+authors = ["Charalampos (Babis) Moustafelos"]
+readme = "README.md"
+
+packages = [
+    { include = "homegater", from = "src"}
+]
+
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

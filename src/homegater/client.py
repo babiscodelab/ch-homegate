@@ -15,18 +15,19 @@ class HomegateClient:
     def __init__(self):
         pass
 
-    def get_geo_tags(self, location_name: str):
+    def get_geo_tags(self, location_name: str, results_count: int = 1):
         """Retrieve geo tags based on the location name."""
-        url = f"{self.BASE_URL}/geo/locations?lang=en&name={location_name}&size=1"
+        url = f"{self.BASE_URL}/geo/locations?lang=en&name={location_name}&size={results_count}"
         response = requests.get(url)
         response_data = response.json()
         
         # Check if we received results
         if response_data.get("total", 0) > 0 and "results" in response_data:
-            # Extract the geo tag from the first result
-            geo_tag = response_data["results"][0]["geoLocation"]["id"]
-            return [geo_tag]
+            # Extract the geo tags from the available results
+            geo_tags = [result["geoLocation"]["id"] for result in response_data["results"][:results_count]]
+            return geo_tags
         return []
+
 
     def search_buy_listings(self, categories, price_limit, location_name, sort_by="listingType", sort_direction="desc", from_index=0, size=20, **kwargs):
         geo_tags = self.get_geo_tags(location_name)

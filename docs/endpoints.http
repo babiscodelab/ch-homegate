@@ -35,4 +35,9 @@ POST  https://api.homegate.ch/search/listings HTTP/1.1
 "excludeCategories":["FURNISHED_FLAT"],"monthlyRent":{"to":10000}},
 "sortBy":"listingType","sortDirection":"desc","from":0,"size":1,"trackTotalHits":1}
 
+### Request 5
+GET https://api.homegate.ch/geo/locations?lang=en&name=Zurich&size=1
 
+
+### Request 6
+GET https://api.homegate.ch/geo/locations?lang=en&name=8050&size=1
