@@ -5,7 +5,6 @@ description = "A Python package to retrieve data from homegate.ch"
 authors = ["Charalampos (Babis) Moustafelos"]
 readme = "README.md"
 keywords = ["homegate", "data", "api"]
-requires-python = "^3.11"
 
 
 packages = [

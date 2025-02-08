@@ -1,6 +1,6 @@
 # Homegater
 
-This is a client python api aim to query homegate.ch buy and rent properties. The python package and client API is done purely for academic purpose and not approved for any commercial usage. It is not an official API.
+This is a client python api aim to query homegate.ch buy and rent properties . The python package and client API is done purely for academic purpose and not approved for any commercial usage. It is not an official API.
 
 
 # Installation
