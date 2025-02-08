@@ -83,10 +83,9 @@ class Homegate:
             "fieldset": "srp-list"
         }
 
-        # Include any extra parameters passed as kwargs
+        # Include any extra parameters passed as kwargs to the query.
         if kwargs:
-            query.update(convert_to_camel_case(kwargs))
-        print(query)
+            query["query"].update(convert_to_camel_case(kwargs))
         try:
             response = requests.post(search_listings_url, json=query)
             response.raise_for_status()

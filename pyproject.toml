@@ -11,11 +11,22 @@ packages = [
 
 
 [tool.poetry.dependencies]
+requests = "^2.28.1"
 python = "^3.11"
 pytest-mock = "^3.14.0"
 pytest = "^8.3.3"
 
 
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+filterwarnings = [
+    "error",
+]
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+pytest = "pytest:main"

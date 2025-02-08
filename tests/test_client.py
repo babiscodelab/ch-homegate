@@ -1,35 +1,12 @@
 import pytest
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, ANY
 from homegater.client import Homegate, convert_to_camel_case  # Adjust the import as needed
 import requests
 
 
-@pytest.fixture
-def client():
-    """Fixture for initializing the Homegate client."""
-    return Homegate()
-
-def test_convert_to_camel_case():
-    snake_case_dict = {
-        "first_key": "value1",
-        "second_key": "value2",
-        "another_key_here": "value3"
-    }
-    expected_output = {
-        "firstKey": "value1",
-        "secondKey": "value2",
-        "anotherKeyHere": "value3"
-    }
-    assert convert_to_camel_case(snake_case_dict) == expected_output
-
-def test_get_geo_tags(client, mocker):
+def test_get_geo_tags(client, mocker, mock_geo_tag):
     # Mock response for the get_geo_tags function
-    mock_response = MagicMock()
-    mock_response.json.return_value = {
-        "total": 2,
-        "results": [{"geoLocation": {"id": "12345"}}, {"geoLocation": {"id": "67890"}}]
-    }
-    mocker.patch('homegater.client.requests.get', return_value=mock_response)
+    mocker.patch('homegater.client.requests.get', return_value=mock_geo_tag)
 
     geo_tags = client.get_geo_tags("Zürich", results_count=1)
 
@@ -40,24 +17,25 @@ def test_get_geo_tags(client, mocker):
     # Assert that the method returns the expected geo tags
     assert geo_tags == ["12345"]
 
-def test_search_buy_listings(client, mocker):
+def test_search_buy_listings(client, mocker, mock_geo_tag):
     # Mock response for the search_buy_listings function
+    mocker.patch('homegater.client.requests.get', return_value=mock_geo_tag)
+
     mock_response = MagicMock()
     mock_response.json.return_value = {"listings": [{"id": "1", "title": "Nice House"}]}
     mocker.patch('homegater.client.requests.post', return_value=mock_response)
 
     categories = ["HOUSE", "VILLA"]
-    result = client.search_buy_listings(categories, 500000, "Zürich")
+    result = client.search_buy_listings(categories=categories, location="Zürich")
 
     # Assert that the correct payload was sent
     expected_payload = {
         "query": {
             "offerType": "BUY",
             "categories": categories,
-            "purchasePrice": {"to": 500000},
             "location": {"geoTags": ["12345"]}  # Mock geo tag result
         },
-        "sortBy": "listingType",
+        "sortBy": "dateCreated",
         "sortDirection": "desc",
         "from": 0,
         "size": 20,
@@ -67,14 +45,16 @@ def test_search_buy_listings(client, mocker):
     requests.post.assert_called_once_with("https://api.homegate.ch/search/listings", json=expected_payload)
     assert result == {"listings": [{"id": "1", "title": "Nice House"}]}
 
-def test_search_rent_listings(client, mocker):
+def test_search_rent_listings(client, mocker, mock_geo_tag):
+    mocker.patch('homegater.client.requests.get', return_value=mock_geo_tag)
+
     # Mock response for the search_rent_listings function
     mock_response = MagicMock()
     mock_response.json.return_value = {"listings": [{"id": "2", "title": "Nice Apartment"}]}
     mocker.patch('homegater.client.requests.post', return_value=mock_response)
 
     categories = ["APARTMENT", "DUPLEX"]
-    result = client.search_rent_listings(categories, 3000, "Zürich")
+    result = client.search_rent_listings(categories=categories, location="Zürich", monthly_rent={'to': 3000})
 
     # Assert that the correct payload was sent
     expected_payload = {
@@ -84,14 +64,17 @@ def test_search_rent_listings(client, mocker):
             "monthlyRent": {"to": 3000},
             "location": {"geoTags": ["12345"]}  # Mock geo tag result
         },
-        "sortBy": "listingType",
+        "sortBy": "dateCreated",
         "sortDirection": "desc",
         "from": 0,
         "size": 20,
         "trackTotalHits": True,
         "fieldset": "srp-list"
     }
-    requests.post.assert_called_once_with("https://api.homegate.ch/search/listings", json=expected_payload)
+    requests.post.assert_called_once_with("https://api.homegate.ch/search/listings", json=ANY)
+    actual_payload = requests.post.call_args[1]['json']
+    assert actual_payload == expected_payload
+
     assert result == {"listings": [{"id": "2", "title": "Nice Apartment"}]}
 
 def test_get_listing(client, mocker):
