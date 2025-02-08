@@ -1,4 +1,5 @@
 import json
+
 from homegater import Homegate
 
 client = Homegate()
@@ -6,7 +7,7 @@ client = Homegate()
 star = 80 * "*"
 
 # Example 1: Basic search with additional parameters
-house = ["CHALET", "RUSTICO", "FARM_HOUSE", "BUNGALOW", 
+house = ["CHALET", "RUSTICO", "FARM_HOUSE", "BUNGALOW",
                   "SINGLE_HOUSE", "ENGADINE_HOUSE", "BIFAMILIAR_HOUSE", "VILLA"]
 
 flat = ["APARTMENT", "MAISONETTE", "DUPLEX", "ATTIC_FLAT", "ROOF_FLAT"]

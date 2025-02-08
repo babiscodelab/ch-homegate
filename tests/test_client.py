@@ -1,6 +1,5 @@
-import pytest
-from unittest.mock import MagicMock, ANY
-from homegater.client import Homegate, convert_to_camel_case  # Adjust the import as needed
+from unittest.mock import ANY, MagicMock
+
 import requests
 
 

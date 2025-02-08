@@ -1,6 +1,4 @@
-import requests
-import json
-from typing import List, Dict, Any
+from typing import Any, Dict
 
 
 def convert_to_camel_case(snake_case_dict: Dict[str, Any]) -> Dict[str, Any]:

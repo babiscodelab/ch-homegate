@@ -1,7 +1,10 @@
 
-from homegater.client import Homegate  # Adjust the import as needed
 from unittest.mock import MagicMock
+
 import pytest
+
+from homegater.client import Homegate  # Adjust the import as needed
+
 
 @pytest.fixture
 def client():

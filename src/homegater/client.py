@@ -1,14 +1,16 @@
-import requests
-from typing import List, Dict, Any, Union
-from homegater.utils import convert_to_camel_case
 import itertools
+from typing import Any, Dict, List, Union
+
+import requests
+
+from homegater.utils import convert_to_camel_case
 
 HOUSE_CATEGORY = ["CHALET", "RUSTICO", "FARM_HOUSE", "BUNGALOW", "SINGLE_HOUSE", "ENGADINE_HOUSE", "BIFAMILIAR_HOUSE", "VILLA"]
 FLAT_CATEGORY = ["APARTMENT", "MAISONETTE", "DUPLEX", "ATTIC_FLAT", "ROOF_FLAT", "STUDIO", "SINGLE_ROOM", "TERRACE_FLAT", "BACHELOR_FLAT", "LOFT", "ATTIC", "FURNISHED_FLAT"]
 
 class Homegate:
     BASE_URL = "https://api.homegate.ch"
-    
+
     def __init__(self):
         pass
 
@@ -42,8 +44,8 @@ class Homegate:
             return geo_tags
         return []
 
-    def search_listings(self, *, offer_type: str, categories: List[str], location: Union[str, List[str]], 
-                        sort_by: str = "dateCreated", sort_direction: str = "desc", 
+    def search_listings(self, *, offer_type: str, categories: List[str], location: Union[str, List[str]],
+                        sort_by: str = "dateCreated", sort_direction: str = "desc",
                         from_index: int = 0, size: int = 20, **kwargs) -> Dict[str, Any]:
         """
         Search for listings based on various parameters.
@@ -63,11 +65,11 @@ class Homegate:
         """
         if isinstance(location, str) or location is None:
             location = [location]
-        
+
         geo_tags = [self.get_geo_tags(loc) for loc in location]
         geo_tags = list(itertools.chain.from_iterable(geo_tags))
         search_listings_url = f"{self.BASE_URL}/search/listings"
-        
+
         # Prepare the base query
         query = {
             "query": {
@@ -94,8 +96,8 @@ class Homegate:
             print(f"Error searching listings: {e}")
             return {}
 
-    def search_buy_listings(self, *, location: Union[str, List[str]], categories: List[str] = None, 
-                            sort_by: str = "dateCreated", sort_direction: str = "desc", 
+    def search_buy_listings(self, *, location: Union[str, List[str]], categories: List[str] = None,
+                            sort_by: str = "dateCreated", sort_direction: str = "desc",
                             from_index: int = 0, size: int = 20, **kwargs) -> Dict[str, Any]:
         """
         Search for buy listings based on various parameters.
@@ -114,11 +116,11 @@ class Homegate:
         """
         if categories is None:
             categories = HOUSE_CATEGORY + FLAT_CATEGORY
-        return self.search_listings(offer_type="BUY", categories=categories, location=location, sort_by=sort_by, sort_direction=sort_direction, 
+        return self.search_listings(offer_type="BUY", categories=categories, location=location, sort_by=sort_by, sort_direction=sort_direction,
                                     from_index=from_index, size=size, **kwargs)
 
-    def search_rent_listings(self, *, location: Union[str, List[str]] = None, categories: List[str] = None, 
-                             sort_by: str = "dateCreated", sort_direction: str = "desc", 
+    def search_rent_listings(self, *, location: Union[str, List[str]] = None, categories: List[str] = None,
+                             sort_by: str = "dateCreated", sort_direction: str = "desc",
                              from_index: int = 0, size: int = 20, **kwargs) -> Dict[str, Any]:
         """
         Search for rent listings based on various parameters.
@@ -137,7 +139,7 @@ class Homegate:
         """
         if categories is None:
             categories = HOUSE_CATEGORY + FLAT_CATEGORY
-        return self.search_listings(offer_type="RENT", categories=categories, location=location, sort_by=sort_by, sort_direction=sort_direction, 
+        return self.search_listings(offer_type="RENT", categories=categories, location=location, sort_by=sort_by, sort_direction=sort_direction,
                                     from_index=from_index, size=size, **kwargs)
 
     def get_listing(self, listing_id):

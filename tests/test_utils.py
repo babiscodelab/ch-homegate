@@ -1,5 +1,5 @@
-import pytest
 from homegater.utils import convert_to_camel_case
+
 
 def test_convert_to_camel_case_simple():
     snake_case_dict = {
