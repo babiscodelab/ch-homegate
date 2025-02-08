@@ -1,7 +1,7 @@
-from typing import Any, Dict
+from typing import Any
 
 
-def convert_to_camel_case(snake_case_dict: Dict[str, Any]) -> Dict[str, Any]:
+def convert_to_camel_case(snake_case_dict: dict[str, Any]) -> dict[str, Any]:
     """Convert snake_case keys to camelCase."""
     camel_case_dict = {}
     for key, value in snake_case_dict.items():

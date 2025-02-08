@@ -7,8 +7,16 @@ client = Homegate()
 star = 80 * "*"
 
 # Example 1: Basic search with additional parameters
-house = ["CHALET", "RUSTICO", "FARM_HOUSE", "BUNGALOW",
-                  "SINGLE_HOUSE", "ENGADINE_HOUSE", "BIFAMILIAR_HOUSE", "VILLA"]
+house = [
+    "CHALET",
+    "RUSTICO",
+    "FARM_HOUSE",
+    "BUNGALOW",
+    "SINGLE_HOUSE",
+    "ENGADINE_HOUSE",
+    "BIFAMILIAR_HOUSE",
+    "VILLA",
+]
 
 flat = ["APARTMENT", "MAISONETTE", "DUPLEX", "ATTIC_FLAT", "ROOF_FLAT"]
 
@@ -27,10 +35,12 @@ kwargs = {
     "isOldBuilding": True,
     "isMinergie": True,
     "hasParkingOrGarage": True,
-    "isPriceDefined": True
-    }
+    "isPriceDefined": True,
+}
 
-buy_listings = client.search_buy_listings(categories=house, location="Kanton Zürich", **kwargs)
+buy_listings = client.search_buy_listings(
+    categories=house, location="Kanton Zürich", **kwargs
+)
 print(json.dumps(buy_listings, indent=2))
 
 print(star)
@@ -41,7 +51,7 @@ kwargs = {
     "numberOfRooms": {"from": 3, "to": 6},
     "yearBuilt": {"from": 2010, "to": 2025},
     "hasBalcony": True,
-    "purchasePrice": {"from": 200000, "to": 3000000}
+    "purchasePrice": {"from": 200000, "to": 3000000},
 }
 
 buy_listings = client.search_buy_listings(categories=house, location="Geneva", **kwargs)
@@ -49,11 +59,11 @@ print(json.dumps(buy_listings, indent=2))
 print(star)
 
 # Example 3: Search with minimal parameters using the post code
-kwargs = {
-    "purchasePrice": {"from": 500000, "to": 2000000}
-    }
+kwargs = {"purchasePrice": {"from": 500000, "to": 2000000}}
 
-buy_listings = client.search_buy_listings(categories=house, location=["8050", "8820", "Horgen"], **kwargs)
+buy_listings = client.search_buy_listings(
+    categories=house, location=["8050", "8820", "Horgen"], **kwargs
+)
 print(json.dumps(buy_listings, indent=2))
 print(star)
 
@@ -64,11 +74,14 @@ print(json.dumps(listing_details, indent=2))
 print(star)
 
 # Example 4: Search for properties to rent with an extra parameter (monthly rent)
-kwargs = {
-    "monthlyRent": {"from": 100, "to": 3000000}
-}
+kwargs = {"monthlyRent": {"from": 100, "to": 3000000}}
 
-rent_listings = client.search_rent_listings(categories=flat, location="Thalwil", exclude_categories=["FURNISHED_FLAT"], monthly_rent="test")
+rent_listings = client.search_rent_listings(
+    categories=flat,
+    location="Thalwil",
+    exclude_categories=["FURNISHED_FLAT"],
+    monthly_rent="test",
+)
 print(json.dumps(rent_listings, indent=2))
 print(star)
 

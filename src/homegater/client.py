@@ -1,5 +1,5 @@
 import itertools
-from typing import Any, Dict, List, Union
+from typing import Any, Union
 
 import requests
 
@@ -14,7 +14,7 @@ class Homegate:
     def __init__(self):
         pass
 
-    def get_geo_tags(self, location_name: str, results_count: int = 1) -> List[str]:
+    def get_geo_tags(self, location_name: str, results_count: int = 1) -> list[str]:
         """
         Retrieve geo tags based on the location name.
 
@@ -44,9 +44,9 @@ class Homegate:
             return geo_tags
         return []
 
-    def search_listings(self, *, offer_type: str, categories: List[str], location: Union[str, List[str]],
+    def search_listings(self, *, offer_type: str, categories: list[str], location: Union[str, list[str]],
                         sort_by: str = "dateCreated", sort_direction: str = "desc",
-                        from_index: int = 0, size: int = 20, **kwargs) -> Dict[str, Any]:
+                        from_index: int = 0, size: int = 20, **kwargs) -> dict[str, Any]:
         """
         Search for listings based on various parameters.
 
@@ -96,9 +96,9 @@ class Homegate:
             print(f"Error searching listings: {e}")
             return {}
 
-    def search_buy_listings(self, *, location: Union[str, List[str]], categories: List[str] = None,
+    def search_buy_listings(self, *, location: Union[str, list[str]], categories: list[str] = None,
                             sort_by: str = "dateCreated", sort_direction: str = "desc",
-                            from_index: int = 0, size: int = 20, **kwargs) -> Dict[str, Any]:
+                            from_index: int = 0, size: int = 20, **kwargs) -> dict[str, Any]:
         """
         Search for buy listings based on various parameters.
 
@@ -119,9 +119,9 @@ class Homegate:
         return self.search_listings(offer_type="BUY", categories=categories, location=location, sort_by=sort_by, sort_direction=sort_direction,
                                     from_index=from_index, size=size, **kwargs)
 
-    def search_rent_listings(self, *, location: Union[str, List[str]] = None, categories: List[str] = None,
+    def search_rent_listings(self, *, location: Union[str, list[str]] = None, categories: list[str] = None,
                              sort_by: str = "dateCreated", sort_direction: str = "desc",
-                             from_index: int = 0, size: int = 20, **kwargs) -> Dict[str, Any]:
+                             from_index: int = 0, size: int = 20, **kwargs) -> dict[str, Any]:
         """
         Search for rent listings based on various parameters.
 

@@ -1,2 +1,1 @@
-from homegater.client import Homegate
-
+from homegater.client import Homegate as Homegate
