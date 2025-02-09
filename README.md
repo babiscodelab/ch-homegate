@@ -1,6 +1,6 @@
 # Homegater
 
-This is a client python api aim to query homegate.ch buy and rent properties . The python package and client API is done purely for academic purpose and not approved for any commercial usage. It is not an official API.
+This is a client python api aim to query homegate.ch buy and rent properties. The python package and client API is done purely for academic/experimental purpose and not approved for any commercial usage. It is not an official API.
 
 
 # Installation
@@ -36,6 +36,18 @@ api.search_rent_listings(location="8001", **kwargs)
 
 ```
 
-More examples can be found on `./examples/api_usage.py`.
+More examples can be found on [API usage examples](./examples/api_usage.py).
+
+## Location
+
+The location should be a valid location used in homegate.ch search. The suggested and most straight forward way to look for location is to provide the zip codes.
 
 
+
+## Further Improvements
+
+Make the location searching more robust.
+
+Challenges:
+- Many languages involved, eg Canton vs Kanton.
+- A location may have several meanings, eg Zug is a city and a Canton.
