@@ -6,7 +6,7 @@ authors = ["Charalampos (Babis) Moustafelos"]
 readme = "README.md"
 keywords = ["homegate", "data", "api"]
 repository = "https://github.com/babiscodelab/ch-homegate/tree/main"
-homegate = "https://github.com/babiscodelab/ch-homegate/tree/main"
+homepage = "https://github.com/babiscodelab/ch-homegate/tree/main"
 
 packages = [
     { include = "homegater", from = "src"}
