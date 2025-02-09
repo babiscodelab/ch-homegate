@@ -44,7 +44,7 @@ class Homegate:
             raise ValueError(
                 "Invalid search language. Only 'en', 'de', 'fr', or 'it' are accepted."
             )
-        self.search_lang = location_search_lang
+        self.location_search_lang = location_search_lang
 
     def get_geo_tags(self, location_name: str, results_count: int = 1) -> list[str]:
         """
@@ -60,7 +60,7 @@ class Homegate:
         if not location_name:
             return ["geo-country-switzerland"]
 
-        geo_tags_url = f"{self.BASE_URL}/geo/locations?lang={self.search_lang}&name={location_name}&size={results_count}"
+        geo_tags_url = f"{self.BASE_URL}/geo/locations?lang={self.location_search_lang}&name={location_name}&size={results_count}"
         try:
             response = requests.get(geo_tags_url)
             response.raise_for_status()
