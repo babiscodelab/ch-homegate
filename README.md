@@ -40,14 +40,9 @@ More examples can be found on [API usage examples](./examples/api_usage.py).
 
 ## Location
 
-The location should be a valid location used in homegate.ch search. The suggested and most straight forward way to look for location is to provide the zip codes.
-
+The location should be a valid location used in homegate.ch search. The suggested and most straight forward way and robust way to look for location is to provide the zip codes.
 
 
 ## Further Improvements
 
-Make the location searching more robust.
-
-Challenges:
-- Many languages involved, eg Canton vs Kanton.
-- A location may have several meanings, eg Zug is a city and a Canton.
+Make the location searching more robust even when the user provides the location name.

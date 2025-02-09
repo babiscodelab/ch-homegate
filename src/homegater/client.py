@@ -3,7 +3,7 @@ from typing import Any, Union
 
 import requests
 
-from homegater.utils import convert_to_camel_case, LocationNotFoundException
+from homegater.utils import LocationNotFoundException, convert_to_camel_case
 
 HOUSE_CATEGORY = [
     "CHALET",
@@ -34,8 +34,17 @@ FLAT_CATEGORY = [
 class Homegate:
     BASE_URL = "https://api.homegate.ch"
 
-    def __init__(self):
-        pass
+    def __init__(self, location_search_lang: str = "en"):
+        """
+        Initialize the Homegate client.
+        search_lang (str): The language to use for search results. Can be "en", "de", "fr", or "it". Defaults to "en".
+        """
+
+        if location_search_lang not in ("en", "de", "fr", "it"):
+            raise ValueError(
+                "Invalid search language. Only 'en', 'de', 'fr', or 'it' are accepted."
+            )
+        self.search_lang = location_search_lang
 
     def get_geo_tags(self, location_name: str, results_count: int = 1) -> list[str]:
         """
@@ -51,7 +60,7 @@ class Homegate:
         if not location_name:
             return ["geo-country-switzerland"]
 
-        geo_tags_url = f"{self.BASE_URL}/geo/locations?lang=en&name={location_name}&size={results_count}"
+        geo_tags_url = f"{self.BASE_URL}/geo/locations?lang={self.search_lang}&name={location_name}&size={results_count}"
         try:
             response = requests.get(geo_tags_url)
             response.raise_for_status()
