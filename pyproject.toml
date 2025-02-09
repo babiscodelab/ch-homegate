@@ -1,11 +1,12 @@
 [tool.poetry]
 name = "homegater"
-version = "0.1.0"
+version = "0.1.1"
 description = "A Python package to retrieve data from homegate.ch"
 authors = ["Charalampos (Babis) Moustafelos"]
 readme = "README.md"
 keywords = ["homegate", "data", "api"]
-
+repository = "https://github.com/babiscodelab/ch-homegate/tree/main"
+homegate = "https://github.com/babiscodelab/ch-homegate/tree/main"
 
 packages = [
     { include = "homegater", from = "src"}

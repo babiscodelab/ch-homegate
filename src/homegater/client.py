@@ -46,7 +46,7 @@ class Homegate:
             )
         self.location_search_lang = location_search_lang
 
-    def get_geo_tags(self, location_name: str, results_count: int = 1) -> list[str]:
+    def get_geo_tags(self, location_name: str, results_count: int = 5) -> list[str]:
         """
         Retrieve geo tags based on the location name.
 

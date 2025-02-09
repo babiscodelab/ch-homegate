@@ -1,6 +1,6 @@
 import json
 
-from homegater import FLAT_CATEGORY, HOUSE_CATEGORY, Homegate
+from homegater.client import FLAT_CATEGORY, HOUSE_CATEGORY, Homegate
 
 client = Homegate(location_search_lang="en")
 
@@ -66,15 +66,15 @@ kwargs = {
     "yearBuilt": {"from": 2005, "to": 2025},
     "purchasePrice": {"from": 100000, "to": 4000000},
     "cubage": {"from": 6, "to": 55555},
-    "hasBalcony": True,
-    "hasElevator": True,
-    "isWheelchairAccessible": True,
-    "isNewBuilding": True,
-    "hasSwimmingPool": True,
-    "isOldBuilding": True,
-    "isMinergie": True,
-    "hasParkingOrGarage": True,
-    "isPriceDefined": True,
+    # "hasBalcony": False,
+    # "hasElevator": False,
+    # "isWheelchairAccessible": False,
+    # "isNewBuilding": False,
+    # "hasSwimmingPool": False,
+    # "isOldBuilding": False,
+    # "isMinergie": False,
+    # "hasParkingOrGarage": True,
+    # "isPriceDefined": True,
 }
 
 
