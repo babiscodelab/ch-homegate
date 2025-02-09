@@ -3,10 +3,33 @@ from typing import Any, Union
 
 import requests
 
-from homegater.utils import convert_to_camel_case
+from homegater.utils import convert_to_camel_case, LocationNotFoundException
 
-HOUSE_CATEGORY = ["CHALET", "RUSTICO", "FARM_HOUSE", "BUNGALOW", "SINGLE_HOUSE", "ENGADINE_HOUSE", "BIFAMILIAR_HOUSE", "VILLA"]
-FLAT_CATEGORY = ["APARTMENT", "MAISONETTE", "DUPLEX", "ATTIC_FLAT", "ROOF_FLAT", "STUDIO", "SINGLE_ROOM", "TERRACE_FLAT", "BACHELOR_FLAT", "LOFT", "ATTIC", "FURNISHED_FLAT"]
+HOUSE_CATEGORY = [
+    "CHALET",
+    "RUSTICO",
+    "FARM_HOUSE",
+    "BUNGALOW",
+    "SINGLE_HOUSE",
+    "ENGADINE_HOUSE",
+    "BIFAMILIAR_HOUSE",
+    "VILLA",
+]
+FLAT_CATEGORY = [
+    "APARTMENT",
+    "MAISONETTE",
+    "DUPLEX",
+    "ATTIC_FLAT",
+    "ROOF_FLAT",
+    "STUDIO",
+    "SINGLE_ROOM",
+    "TERRACE_FLAT",
+    "BACHELOR_FLAT",
+    "LOFT",
+    "ATTIC",
+    "FURNISHED_FLAT",
+]
+
 
 class Homegate:
     BASE_URL = "https://api.homegate.ch"
@@ -40,13 +63,26 @@ class Homegate:
         # Check if we received results
         if response_data.get("total", 0) > 0 and "results" in response_data:
             # Extract the geo tags from the available results
-            geo_tags = [result["geoLocation"]["id"] for result in response_data["results"][:results_count]]
+            geo_tags = [
+                result["geoLocation"]["id"]
+                for result in response_data["results"][:results_count]
+            ]
             return geo_tags
-        return []
+        else:
+            raise LocationNotFoundException(location_name)
 
-    def search_listings(self, *, offer_type: str, categories: list[str], location: Union[str, list[str]],
-                        sort_by: str = "dateCreated", sort_direction: str = "desc",
-                        from_index: int = 0, size: int = 20, **kwargs) -> dict[str, Any]:
+    def search_listings(
+        self,
+        *,
+        offer_type: str,
+        categories: list[str],
+        location: Union[str, list[str]],
+        sort_by: str = "dateCreated",
+        sort_direction: str = "desc",
+        from_index: int = 0,
+        size: int = 20,
+        **kwargs,
+    ) -> dict[str, Any]:
         """
         Search for listings based on various parameters.
 
@@ -75,14 +111,14 @@ class Homegate:
             "query": {
                 "offerType": offer_type,
                 "categories": categories,
-                "location": {"geoTags": geo_tags}
+                "location": {"geoTags": geo_tags},
             },
             "sortBy": sort_by,
             "sortDirection": sort_direction,
             "from": from_index,
             "size": size,
             "trackTotalHits": True,
-            "fieldset": "srp-list"
+            "fieldset": "srp-list",
         }
 
         # Include any extra parameters passed as kwargs to the query.
@@ -96,9 +132,17 @@ class Homegate:
             print(f"Error searching listings: {e}")
             return {}
 
-    def search_buy_listings(self, *, location: Union[str, list[str]], categories: list[str] = None,
-                            sort_by: str = "dateCreated", sort_direction: str = "desc",
-                            from_index: int = 0, size: int = 20, **kwargs) -> dict[str, Any]:
+    def search_buy_listings(
+        self,
+        *,
+        location: Union[str, list[str]],
+        categories: list[str] = None,
+        sort_by: str = "dateCreated",
+        sort_direction: str = "desc",
+        from_index: int = 0,
+        size: int = 20,
+        **kwargs,
+    ) -> dict[str, Any]:
         """
         Search for buy listings based on various parameters.
 
@@ -116,12 +160,28 @@ class Homegate:
         """
         if categories is None:
             categories = HOUSE_CATEGORY + FLAT_CATEGORY
-        return self.search_listings(offer_type="BUY", categories=categories, location=location, sort_by=sort_by, sort_direction=sort_direction,
-                                    from_index=from_index, size=size, **kwargs)
+        return self.search_listings(
+            offer_type="BUY",
+            categories=categories,
+            location=location,
+            sort_by=sort_by,
+            sort_direction=sort_direction,
+            from_index=from_index,
+            size=size,
+            **kwargs,
+        )
 
-    def search_rent_listings(self, *, location: Union[str, list[str]] = None, categories: list[str] = None,
-                             sort_by: str = "dateCreated", sort_direction: str = "desc",
-                             from_index: int = 0, size: int = 20, **kwargs) -> dict[str, Any]:
+    def search_rent_listings(
+        self,
+        *,
+        location: Union[str, list[str]] = None,
+        categories: list[str] = None,
+        sort_by: str = "dateCreated",
+        sort_direction: str = "desc",
+        from_index: int = 0,
+        size: int = 20,
+        **kwargs,
+    ) -> dict[str, Any]:
         """
         Search for rent listings based on various parameters.
 
@@ -139,8 +199,16 @@ class Homegate:
         """
         if categories is None:
             categories = HOUSE_CATEGORY + FLAT_CATEGORY
-        return self.search_listings(offer_type="RENT", categories=categories, location=location, sort_by=sort_by, sort_direction=sort_direction,
-                                    from_index=from_index, size=size, **kwargs)
+        return self.search_listings(
+            offer_type="RENT",
+            categories=categories,
+            location=location,
+            sort_by=sort_by,
+            sort_direction=sort_direction,
+            from_index=from_index,
+            size=size,
+            **kwargs,
+        )
 
     def get_listing(self, listing_id):
         url = f"{self.BASE_URL}/listings/listing/{listing_id}?sanitize=true"
