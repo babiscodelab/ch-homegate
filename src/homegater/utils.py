@@ -1,3 +1,4 @@
+import re
 from typing import Any
 
 
@@ -18,3 +19,23 @@ class LocationNotFoundException(Exception):
     def __init__(self, location: str):
         self.message = f"Location not found: {location}. Only valid homegate locations are accepted."
         super().__init__(self.message)
+
+
+def _is_valid_geo_tag(location: str) -> bool:
+    """
+    Check if the location string is a valid homegate geo tag.
+    """
+
+    pattern = r"geo-(canton|region|zipcode|city|country)-[a-zA-Z0-9-]+"
+    match = re.search(pattern, location)
+    return match is not None
+
+
+def _is_unique_geo_set(geo_list: list[dict]) -> bool:
+    """
+    geo_list: List of geo locations.
+    Check if the geo_list contains actual unique locations by comparing the center lat and lon.
+    """
+    center_lat = {geo["geoLocation"]["center"]["lat"] for geo in geo_list}
+    center_lon = {geo["geoLocation"]["center"]["lon"] for geo in geo_list}
+    return 1 == len(center_lat) == len(center_lon)

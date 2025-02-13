@@ -3,7 +3,12 @@ from typing import Any, Union
 
 import requests
 
-from homegater.utils import LocationNotFoundException, convert_to_camel_case
+from homegater.utils import (
+    LocationNotFoundException,
+    _is_unique_geo_set,
+    convert_to_camel_case,
+    _is_valid_geo_tag,
+)
 
 HOUSE_CATEGORY = [
     "CHALET",
@@ -34,10 +39,11 @@ FLAT_CATEGORY = [
 class Homegate:
     BASE_URL = "https://api.homegate.ch"
 
-    def __init__(self, location_search_lang: str = "en"):
+    def __init__(self, location_search_lang: str = "en", max_search_geo: int = 1):
         """
         Initialize the Homegate client.
         search_lang (str): The language to use for search results. Can be "en", "de", "fr", or "it". Defaults to "en".
+        max_search_geo (int): The maximum number of geo tags to search for location. Defaults to 1.
         """
 
         if location_search_lang not in ("en", "de", "fr", "it"):
@@ -45,20 +51,25 @@ class Homegate:
                 "Invalid search language. Only 'en', 'de', 'fr', or 'it' are accepted."
             )
         self.location_search_lang = location_search_lang
+        self.max_search_geo = max_search_geo
 
-    def get_geo_tags(self, location_name: str, results_count: int = 1) -> list[str]:
+    def get_geo_tags(self, location_name: str, results_count: int = 100) -> list[str]:
         """
         Retrieve geo tags based on the location name.
 
         Args:
             location_name (str): The name of the location to search for geo tags. Can be a Kanton name, Gemeinde name, or zip code.
-            results_count (int, optional): The number of results to return. Defaults to 1.
+            results_count (int, optional): The number of results to return. Defaults to 100.
 
         Returns:
             List[str]: A list of geo tags.
         """
+
         if not location_name:
             return ["geo-country-switzerland"]
+
+        if _is_valid_geo_tag(location_name):
+            return [location_name]
 
         geo_tags_url = f"{self.BASE_URL}/geo/locations?lang={self.location_search_lang}&name={location_name}&size={results_count}"
         try:
@@ -73,10 +84,17 @@ class Homegate:
         if response_data.get("total", 0) > 0 and "results" in response_data:
             # Extract the geo tags from the available results
             geo_tags = [
-                result["geoLocation"]["id"]
-                for result in response_data["results"][:results_count]
+                result["geoLocation"]["id"] for result in response_data["results"]
             ]
-            return geo_tags
+            if len(geo_tags) > self.max_search_geo and not _is_unique_geo_set(
+                response_data["results"]
+            ):
+                raise ValueError(
+                    f"{len(geo_tags)} geo-tags found with limit {self.max_search_geo}: {geo_tags_url} for the requested "
+                    f"location: {location_name}. Please refine your search or incease the limit in the client. "
+                    "The sugggested search way is the zip-code."
+                )
+            return geo_tags[:results_count]
         else:
             raise LocationNotFoundException(location_name)
 
@@ -85,7 +103,7 @@ class Homegate:
         *,
         offer_type: str,
         categories: list[str],
-        location: Union[str, list[str]],
+        location: Union[str, list[str], dict[str, list[str]]] = None,
         sort_by: str = "dateCreated",
         sort_direction: str = "desc",
         from_index: int = 0,
@@ -223,3 +241,18 @@ class Homegate:
         url = f"{self.BASE_URL}/listings/listing/{listing_id}?sanitize=true"
         response = requests.get(url)
         return response.json()
+
+
+def _infer_geo_tags(location) -> list[dict[str, str]]:
+    permissible_keys = ("canton", "city", "zipcode")
+    if isinstance(location, str):
+        return [location]
+    elif isinstance(location, list):
+        return location
+    elif isinstance(location, dict):
+        for key, value in location.items():
+            if key.lower() not in permissible_keys:
+                raise ValueError(
+                    f"Invalid key '{key}' in location dictionary. Only 'canton', 'city', and 'zipcode' are accepted."
+                )
+                return value

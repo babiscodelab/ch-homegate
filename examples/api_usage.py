@@ -17,7 +17,7 @@ kwargs = {
 }
 
 buy_listings = client.search_buy_listings(
-    categories=HOUSE_CATEGORY, location="Geneva", **kwargs
+    categories=HOUSE_CATEGORY, location="Thalwil", **kwargs
 )
 print(json.dumps(buy_listings, indent=2))
 print(star)
@@ -26,7 +26,7 @@ print(star)
 kwargs = {"purchasePrice": {"from": 500000, "to": 2000000}}
 
 buy_listings = client.search_buy_listings(
-    categories=HOUSE_CATEGORY, location=["8050", "8820", "Horgen"], **kwargs
+    categories=HOUSE_CATEGORY, location=["8050", "8820", "Richterswil"], **kwargs
 )
 print(json.dumps(buy_listings, indent=2))
 print(star)
@@ -79,6 +79,10 @@ kwargs = {
 
 
 buy_listings = client.search_buy_listings(
-    categories=HOUSE_CATEGORY, location="Kanton Zürich", **kwargs
+    categories=HOUSE_CATEGORY, location="geo-canton-zurich", **kwargs
 )
+print(json.dumps(buy_listings, indent=2))
+
+
+buy_listings = client.search_buy_listings(location=["geo-canton-zurich", "8810"])
 print(json.dumps(buy_listings, indent=2))

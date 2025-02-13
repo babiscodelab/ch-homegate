@@ -33,7 +33,7 @@ def test_search_buy_listings(client, mocker, mock_geo_tag):
         "query": {
             "offerType": "BUY",
             "categories": categories,
-            "location": {"geoTags": ["12345"]},  # Mock geo tag result
+            "location": {"geoTags": ["12345", "67890"]},  # Mock geo tag result
         },
         "sortBy": "dateCreated",
         "sortDirection": "desc",
@@ -69,7 +69,7 @@ def test_search_rent_listings(client, mocker, mock_geo_tag):
             "offerType": "RENT",
             "categories": categories,
             "monthlyRent": {"to": 3000},
-            "location": {"geoTags": ["12345"]},  # Mock geo tag result
+            "location": {"geoTags": ["12345", "67890"]},  # Mock geo tag result
         },
         "sortBy": "dateCreated",
         "sortDirection": "desc",
