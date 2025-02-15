@@ -6,8 +6,9 @@ import requests
 from homegater.utils import (
     LocationNotFoundException,
     _is_unique_geo_set,
-    convert_to_camel_case,
     _is_valid_geo_tag,
+    _unique_geo_set,
+    convert_to_camel_case,
 )
 
 HOUSE_CATEGORY = [
@@ -53,7 +54,9 @@ class Homegate:
         self.location_search_lang = location_search_lang
         self.max_search_geo = max_search_geo
 
-    def get_geo_tags(self, location_name: str, results_count: int = 100) -> list[str]:
+    def get_geo_tags(
+        self, location_name: str, results_count: int = 100, unique: bool = True
+    ) -> list[str]:
         """
         Retrieve geo tags based on the location name.
 
@@ -79,24 +82,15 @@ class Homegate:
         except requests.RequestException as e:
             print(f"Error fetching geo tags: {e}")
             return []
+        if response_data["total"] == 0:
+            return []
 
-        # Check if we received results
-        if response_data.get("total", 0) > 0 and "results" in response_data:
-            # Extract the geo tags from the available results
-            geo_tags = [
-                result["geoLocation"]["id"] for result in response_data["results"]
-            ]
-            if len(geo_tags) > self.max_search_geo and not _is_unique_geo_set(
-                response_data["results"]
-            ):
-                raise ValueError(
-                    f"{len(geo_tags)} geo-tags found with limit {self.max_search_geo}: {geo_tags_url} for the requested "
-                    f"location: {location_name}. Please refine your search or incease the limit in the client. "
-                    "The sugggested search way is the zip-code."
-                )
-            return geo_tags[:results_count]
+        if unique:
+            to_return = _unique_geo_set(response_data["results"])
         else:
-            raise LocationNotFoundException(location_name)
+            to_return = response_data["results"]
+
+        return [geo["geoLocation"]["id"] for geo in to_return]
 
     def search_listings(
         self,
@@ -129,7 +123,17 @@ class Homegate:
         if isinstance(location, str) or location is None:
             location = [location]
 
-        geo_tags = [self.get_geo_tags(loc) for loc in location]
+        geo_tags = []
+        for loc in location:
+            retrieved_geo_tags = self.get_geo_tags(loc, unique=True)
+            if len(retrieved_geo_tags) > self.max_search_geo:
+                raise ValueError(
+                    f"{len(geo_tags)} geo-tags found with limit {self.max_search_geo} for the requested location: {loc}. "
+                    "Please refine your search or incease the limit in the client. "
+                    "The sugggested search way is the zip-code."
+                )
+            geo_tags.append(retrieved_geo_tags)
+
         geo_tags = list(itertools.chain.from_iterable(geo_tags))
         search_listings_url = f"{self.BASE_URL}/search/listings"
 
@@ -241,18 +245,3 @@ class Homegate:
         url = f"{self.BASE_URL}/listings/listing/{listing_id}?sanitize=true"
         response = requests.get(url)
         return response.json()
-
-
-def _infer_geo_tags(location) -> list[dict[str, str]]:
-    permissible_keys = ("canton", "city", "zipcode")
-    if isinstance(location, str):
-        return [location]
-    elif isinstance(location, list):
-        return location
-    elif isinstance(location, dict):
-        for key, value in location.items():
-            if key.lower() not in permissible_keys:
-                raise ValueError(
-                    f"Invalid key '{key}' in location dictionary. Only 'canton', 'city', and 'zipcode' are accepted."
-                )
-                return value

@@ -14,7 +14,7 @@ def test_get_geo_tags(client, mocker, mock_geo_tag):
     requests.get.assert_called_once_with(expected_url)
 
     # Assert that the method returns the expected geo tags
-    assert geo_tags == ["12345"]
+    assert geo_tags == ["12345", "67890"]
 
 
 def test_search_buy_listings(client, mocker, mock_geo_tag):

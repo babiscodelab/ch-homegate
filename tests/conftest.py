@@ -21,7 +21,10 @@ def mock_geo_tag():
     mock_response = MagicMock()
     mock_response.json.return_value = {
         "total": 2,
-        "results": [{"geoLocation": {"id": "12345"}}, {"geoLocation": {"id": "67890"}}],
+        "results": [
+            {"geoLocation": {"id": "12345", "center": {"lat": 23.4, "lon": 53.5}}},
+            {"geoLocation": {"id": "67890", "center": {"lat": 26.4, "lon": 453.5}}},
+        ],
     }
     return mock_response
 

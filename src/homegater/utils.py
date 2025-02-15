@@ -39,3 +39,21 @@ def _is_unique_geo_set(geo_list: list[dict]) -> bool:
     center_lat = {geo["geoLocation"]["center"]["lat"] for geo in geo_list}
     center_lon = {geo["geoLocation"]["center"]["lon"] for geo in geo_list}
     return 1 == len(center_lat) == len(center_lon)
+
+
+def _unique_geo_set(geo_list: list[dict]) -> list[dict]:
+    """
+    geo_list: List of geo locations.
+    Return a list of unique geo locations by comparing the center lat and lon.
+    """
+    seen = set()
+    unique_geo_list = []
+    for geo in geo_list:
+        keys = (
+            geo["geoLocation"]["center"]["lat"],
+            geo["geoLocation"]["center"]["lon"],
+        )
+        if keys not in seen:
+            unique_geo_list.append(geo)
+            seen.add(keys)
+    return unique_geo_list
