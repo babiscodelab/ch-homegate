@@ -59,6 +59,9 @@ print(json.dumps(additional_rent_listings, indent=2))
 print(star)
 
 
+# Example: Search for properties to buy with a lot of parameters
+
+# Example of arguments for search_buy_listings
 kwargs = {
     "lotSize": {"from": 50, "to": 5000},
     "livingSpace": {"from": 20, "to": 500},
@@ -77,12 +80,15 @@ kwargs = {
     # "isPriceDefined": True,
 }
 
-
 buy_listings = client.search_buy_listings(
     categories=HOUSE_CATEGORY, location="geo-canton-zurich", **kwargs
 )
 print(json.dumps(buy_listings, indent=2))
+print(star)
 
 
+# Example: Search for properties to buy with multiple location types.
 buy_listings = client.search_buy_listings(location=["geo-canton-zurich", "8810"])
 print(json.dumps(buy_listings, indent=2))
+
+print(star)
