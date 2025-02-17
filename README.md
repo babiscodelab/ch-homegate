@@ -76,4 +76,4 @@ can retrieve the geo tag for a given location by querying the endpoint `https://
 
 ## Contributing
 
-We welcome pull requests 
+We welcome pull requests, issues and feature request.

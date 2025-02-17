@@ -5,7 +5,6 @@ import requests
 
 from homegater.utils import (
     LocationNotFoundException,
-    _is_unique_geo_set,
     _is_valid_geo_tag,
     _unique_geo_set,
     convert_to_camel_case,
@@ -80,10 +79,9 @@ class Homegate:
             response.raise_for_status()
             response_data = response.json()
         except requests.RequestException as e:
-            print(f"Error fetching geo tags: {e}")
-            return []
+            raise Exception(f"Error fetching geo tags: {e}") from e
         if response_data["total"] == 0:
-            return []
+            return LocationNotFoundException(location_name)
 
         if unique:
             to_return = _unique_geo_set(response_data["results"])
